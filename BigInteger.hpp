@@ -125,6 +125,29 @@ class BigInteger {
             num.erase(num.begin()+n);
         }
 
+        //fast power, exp <= 2^64-1
+        BigInteger power(BigInteger& base, unsigned long long exp) {
+            if (exp == 0) {
+                std::string temp = "1";
+                return temp;
+            }
+            if (exp == 1) return base;
+            if (exp&1) return power(base, exp-1) * base;
+            BigInteger half = power(base, exp/2);
+            return half * half;
+        }
+
+        //factorial of f
+        BigInteger factorial() {
+            BigInteger r;
+            r << "1";
+            BigInteger i;
+            for (i << "1"; i<=*this; i++) {
+                r *= i;
+            }
+            return r;
+        }
+
         // returns array representation of the BigInteger
         std::vector<unsigned long long>& getArray() {
             return num;
@@ -154,6 +177,11 @@ class BigInteger {
         BigInteger operator+(std::string& a) {
             BigInteger temp(a);
             return *this+temp;
+        }
+
+        BigInteger operator*(BigInteger& a) {
+            //todo
+            return *this;
         }
 
         BigInteger operator-(BigInteger& a) {
@@ -227,6 +255,10 @@ class BigInteger {
             else num = to_int(n);
         }
 
+        void operator*=(BigInteger& a) {
+            *this = *this * a;
+        }
+
         void operator+=(BigInteger& a) {
             *this = *this + a;
         }
@@ -281,6 +313,14 @@ class BigInteger {
 
         bool operator!=(BigInteger& a) {
             return !(*this == a);
+        }
+
+        bool operator<=(BigInteger& a) {
+            return *this == a || *this < a;
+        }
+
+        bool operator>=(BigInteger& a) {
+            return *this == a || *this > a;
         }
 };
 
