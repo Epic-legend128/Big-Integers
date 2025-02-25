@@ -5,15 +5,22 @@
 
 class BigInteger {
     private:
+        // number of digits allowed per cell in the vector
         const unsigned int LENGTH = 18;
+        
+        // vector holding the BigInteger
         std::vector<unsigned long long> num;
+        
+        // stores the sign of the number(positive or negative)
         bool positive = true;
 
+        // returns number of digits of an unsigned long long, using log10(n)+1
         unsigned long long length(unsigned long long n) const {
             if (n == 0) return 1;
             return ((long double) log2(n)*0.301029995663981)+1;
         }
 
+        // converts string number into vector of unsigned long long
         std::vector<unsigned long long> to_int(std::string& n) {
             std::vector<unsigned long long> r;
             r.reserve(ceil((long double)n.length()/LENGTH));
@@ -29,6 +36,7 @@ class BigInteger {
             return r;
         }
 
+        // adds a BigInteger to the current BigInteger
         BigInteger add(BigInteger& a) {
             bool changeSign = false;
             if (!this->positive && !a.positive) {
@@ -81,6 +89,7 @@ class BigInteger {
         }
 
     public:
+        // overloaded constructors
         BigInteger(std::vector<unsigned long long>& n) {
             num = n;
         }
@@ -89,32 +98,34 @@ class BigInteger {
             num = to_int(n);
         }
 
-        /* BigInteger(std::string n) {
-            num = to_int(n);
-        } */
-
         BigInteger() = default;
 
+        // number of digits of the BigInteger
         unsigned long long len() const {
             return ((num.size()-1)*LENGTH+length(num[num.size()-1]));
         }
 
+        // number of cells in the vector
         unsigned long long size() const {
             return num.size();
         }
 
+        // adds cell to the vector
         void push_back(unsigned long long n) {
             num.push_back(n);
         }
 
+        // deletes the last number
         void erase(unsigned long long n) {
             num.erase(num.begin()+n);
         }
 
+        // returns array representation of the BigInteger
         std::vector<unsigned long long>& getArray() {
             return num;
         }
 
+        // returns string representation of BigInteger
         std::string value() {
             std::string r = "";
             r.reserve(num.size()*LENGTH);
@@ -130,14 +141,11 @@ class BigInteger {
             return r;
         }
 
-        unsigned long long const& operator[](unsigned long long i) const {
-            return num[i];
-        }
-
+        // overloaded operators
         BigInteger operator+(BigInteger& a) {
             return add(a);
         }
-
+        
         BigInteger operator+(std::string& a) {
             BigInteger temp(a);
             return *this+temp;
@@ -209,6 +217,14 @@ class BigInteger {
         }
 
         void operator+=(BigInteger& a) {
-            num = add(a).getArray();
+            *this = *this + a;
+        }
+
+        void operator-=(BigInteger& a) {
+            *this = *this - a;
+        }
+
+        unsigned long long const& operator[](unsigned long long i) const {
+            return num[i];
         }
 };
