@@ -97,8 +97,8 @@ class BigInteger {
         BigInteger(std::string& n) {
             if (n[0] == '-') {
                 positive = false;
-                n = n.substr(1);
-                num = to_int(n);
+                std::string temp = n.substr(1);
+                num = to_int(temp);
             }
             else num = to_int(n);
         }
@@ -143,7 +143,7 @@ class BigInteger {
                     if (a > 0) r = std::string(a, '0') + r;
                 }
             }
-            return r;
+            return (positive ? "" : "-") + r;
         }
 
         // overloaded operators
@@ -157,12 +157,12 @@ class BigInteger {
         }
 
         BigInteger operator-(BigInteger& a) {
-            bool positive = true;
+            bool pos = true;
             if (a > *this) {
                 BigInteger temp = a;
                 a = *this;
                 *this = temp;
-                positive = false;
+                pos = false;
             }
 
             const long long d = (long long)1e18;
@@ -198,7 +198,12 @@ class BigInteger {
             if (carry > 0) {
                 //nothing
             }
-            r.positive = false;
+            if (!pos) {
+                r.positive = false;
+                BigInteger temp = a;
+                a = *this;
+                *this = temp;
+            }
             return r;
         }
 
@@ -209,21 +214,33 @@ class BigInteger {
 
         void operator=(BigInteger a) {
             num = a.getArray();
+            positive = a.positive;
+        }
+
+        //directly assigning value to b without the need of a variable
+        void operator<<(std::string n) {
+            if (n[0] == '-') {
+                positive = false;
+                std::string temp = n.substr(1);
+                num = to_int(temp);
+            }
+            else num = to_int(n);
         }
 
         void operator+=(BigInteger& a) {
             *this = *this + a;
         }
 
-        void operator++(int a) {
-            std::cout << a << std::endl;
+        BigInteger operator++(int a) {
             std::string temp = "1";
             *this = *this + temp;
+            return *this;
         }
 
-        void operator--(int a) {
+        BigInteger operator--(int a) {
             std::string temp = "1";
             *this = *this - temp;
+            return *this;
         }
 
         void operator-=(BigInteger& a) {
@@ -266,3 +283,9 @@ class BigInteger {
             return !(*this == a);
         }
 };
+
+//used for printing in the cout
+std::ostream& operator<<(std::ostream& os, BigInteger& a) {
+    os << a.value();
+    return os;
+}
