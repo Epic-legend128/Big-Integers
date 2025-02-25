@@ -95,7 +95,12 @@ class BigInteger {
         }
 
         BigInteger(std::string& n) {
-            num = to_int(n);
+            if (n[0] == '-') {
+                positive = false;
+                n = n.substr(1);
+                num = to_int(n);
+            }
+            else num = to_int(n);
         }
 
         BigInteger() = default;
@@ -149,16 +154,6 @@ class BigInteger {
         BigInteger operator+(std::string& a) {
             BigInteger temp(a);
             return *this+temp;
-        }
-
-        bool operator>(BigInteger& a) {
-            if (num.size() != a.size()) return num.size() > a.size();
-            for (int i = num.size()-1; i>=0; i--) {
-                if (num[i] != a[i]) {
-                    return num[i] > a[i];
-                }
-            }
-            return false;
         }
 
         BigInteger operator-(BigInteger& a) {
@@ -220,11 +215,53 @@ class BigInteger {
             *this = *this + a;
         }
 
+        void operator++() {
+            std::string temp = "1";
+            *this = *this + temp;
+        }
+
+        void operator--() {
+            std::string temp = "1";
+            *this = *this - temp;
+        }
+
         void operator-=(BigInteger& a) {
             *this = *this - a;
         }
 
         unsigned long long const& operator[](unsigned long long i) const {
             return num[i];
+        }
+
+        bool operator>(BigInteger& a) {
+            if (num.size() != a.size()) return num.size() > a.size();
+            for (int i = num.size()-1; i>=0; i--) {
+                if (num[i] != a[i]) {
+                    return num[i] > a[i];
+                }
+            }
+            return false;
+        }
+
+        bool operator<(BigInteger& a) {
+            if (num.size() != a.size()) return num.size() < a.size();
+            for (int i = num.size()-1; i>=0; i--) {
+                if (num[i] != a[i]) {
+                    return num[i] < a[i];
+                }
+            }
+            return false;
+        }
+
+        bool operator==(BigInteger& a) {
+            if (num.size() != a.size()) return false;
+            for (int i = num.size()-1; i>=0; i--) {
+                if (num[i] != a[i]) return false;
+            }
+            return true;
+        }
+
+        bool operator!=(BigInteger& a) {
+            return !(*this == a);
         }
 };
