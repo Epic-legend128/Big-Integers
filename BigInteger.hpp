@@ -215,12 +215,13 @@ class BigInteger {
             *this = *this + a;
         }
 
-        void operator++() {
+        void operator++(int a) {
+            std::cout << a << std::endl;
             std::string temp = "1";
             *this = *this + temp;
         }
 
-        void operator--() {
+        void operator--(int a) {
             std::string temp = "1";
             *this = *this - temp;
         }
