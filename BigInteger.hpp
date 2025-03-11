@@ -88,6 +88,17 @@ class BigInteger {
             return r;
         }
 
+    protected:
+        // adds cell to the vector
+        void push_back(unsigned long long n) {
+            num.push_back(n);
+        }
+
+        // deletes the last number
+        void erase(unsigned long long n) {
+            num.erase(num.begin()+n);
+        }
+
     public:
         // overloaded constructors
         BigInteger(std::vector<unsigned long long>& n) {
@@ -113,16 +124,6 @@ class BigInteger {
         // number of cells in the vector
         unsigned long long size() const {
             return num.size();
-        }
-
-        // adds cell to the vector
-        void push_back(unsigned long long n) {
-            num.push_back(n);
-        }
-
-        // deletes the last number
-        void erase(unsigned long long n) {
-            num.erase(num.begin()+n);
         }
 
         //fast power, exp <= 2^64-1
